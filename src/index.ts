@@ -1,2 +1,2 @@
-export { DeezerClient, default } from './deezer';
+export { JimceDeezerAPI, default } from './deezer';
 export * from './types';

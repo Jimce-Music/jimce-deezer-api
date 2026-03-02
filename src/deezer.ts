@@ -13,7 +13,7 @@ import {
   DeezerOptions,
 } from './types';
 
-export class DeezerClient {
+export class JimceDeezerAPI {
   private baseUrl: string = 'https://api.deezer.com';
 
   constructor(options?: DeezerOptions) {
@@ -138,4 +138,4 @@ export class DeezerClient {
   }
 }
 
-export default DeezerClient;
+export default JimceDeezerAPI;

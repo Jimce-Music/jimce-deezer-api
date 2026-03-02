@@ -1,18 +1,18 @@
-import { DeezerClient, SearchResult, Track, Album, Artist } from '../../src';
+import { JimceDeezerAPI, SearchResult, Track, Album, Artist } from '../../src';
 
 /**
  * Functional Tests - These tests run against the REAL Deezer API
  * They use IDs from search results to ensure valid data
  */
-describe('DeezerClient Functional Tests (Real API)', () => {
-  let client: DeezerClient;
+describe('JimceDeezerAPI Functional Tests (Real API)', () => {
+  let client: JimceDeezerAPI;
   let searchResults: SearchResult;
   let trackId: number;
   let trackArtistId: number;
   let albumData: any;
 
   beforeAll(async () => {
-    client = new DeezerClient();
+    client = new JimceDeezerAPI();
 
     // First: Execute search to get real IDs
     searchResults = await client.search('Eminem');

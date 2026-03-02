@@ -1,9 +1,9 @@
-import { DeezerClient } from '../../src/deezer';
+import { JimceDeezerAPI } from '../../src/deezer';
 
 // Mock fetch globally
 global.fetch = jest.fn();
 
-describe('DeezerClient Integration Tests (Mocked)', () => {
+describe('JimceDeezerAPI Integration Tests (Mocked)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -27,7 +27,7 @@ describe('DeezerClient Integration Tests (Mocked)', () => {
 
       (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
 
-      const client = new DeezerClient();
+      const client = new JimceDeezerAPI();
       const results = await client.search('test');
 
       expect(global.fetch).toHaveBeenCalledWith(
@@ -45,7 +45,7 @@ describe('DeezerClient Integration Tests (Mocked)', () => {
 
       (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
 
-      const client = new DeezerClient();
+      const client = new JimceDeezerAPI();
       await client.search('Bella & Napoli');
 
       expect(global.fetch).toHaveBeenCalledWith(
@@ -68,7 +68,7 @@ describe('DeezerClient Integration Tests (Mocked)', () => {
 
       (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
 
-      const client = new DeezerClient();
+      const client = new JimceDeezerAPI();
       const track = await client.getTrack(123);
 
       expect(global.fetch).toHaveBeenCalledWith(
@@ -92,7 +92,7 @@ describe('DeezerClient Integration Tests (Mocked)', () => {
 
       (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
 
-      const client = new DeezerClient();
+      const client = new JimceDeezerAPI();
       const album = await client.getAlbum(456);
 
       expect(global.fetch).toHaveBeenCalledWith(
@@ -115,7 +115,7 @@ describe('DeezerClient Integration Tests (Mocked)', () => {
 
       (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
 
-      const client = new DeezerClient();
+      const client = new JimceDeezerAPI();
       const artist = await client.getArtist(789);
 
       expect(global.fetch).toHaveBeenCalledWith(
@@ -139,7 +139,7 @@ describe('DeezerClient Integration Tests (Mocked)', () => {
 
       (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
 
-      const client = new DeezerClient();
+      const client = new JimceDeezerAPI();
       const chart = await client.getChart();
 
       expect(global.fetch).toHaveBeenCalledWith(
@@ -163,7 +163,7 @@ describe('DeezerClient Integration Tests (Mocked)', () => {
 
       (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
 
-      const client = new DeezerClient();
+      const client = new JimceDeezerAPI();
       const genres = await client.getGenres();
 
       expect(global.fetch).toHaveBeenCalledWith(
@@ -184,7 +184,7 @@ describe('DeezerClient Integration Tests (Mocked)', () => {
 
       (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
 
-      const client = new DeezerClient();
+      const client = new JimceDeezerAPI();
 
       await expect(client.getTrack(999999)).rejects.toThrow(
         'Deezer API error'
@@ -196,10 +196,10 @@ describe('DeezerClient Integration Tests (Mocked)', () => {
         new Error('Network error')
       );
 
-      const client = new DeezerClient();
+      const client = new JimceDeezerAPI();
 
       await expect(client.search('test')).rejects.toThrow(
-        'Failed to fetch from Deezer API'
+        'Failed to fetch from JimceDeezerAPI'
       );
     });
   });
@@ -213,7 +213,7 @@ describe('DeezerClient Integration Tests (Mocked)', () => {
 
       (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
 
-      const client = new DeezerClient({ baseUrl: 'https://custom.api.com' });
+      const client = new JimceDeezerAPI({ baseUrl: 'https://custom.api.com' });
       await client.search('test');
 
       expect(global.fetch).toHaveBeenCalledWith(
