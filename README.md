@@ -13,9 +13,9 @@ npm install jimce-deezer-api
 ### Grundlegende Nutzung
 
 ```typescript
-import { DeezerClient } from 'jimce-deezer-api';
+import { JimceDeezerAPI } from 'jimce-deezer-api';
 
-const client = new DeezerClient();
+const client = new JimceDeezerAPI();
 
 // Suche nach einem Track
 const results = await client.search('Bella Napoli');

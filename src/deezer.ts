@@ -131,7 +131,7 @@ export class JimceDeezerAPI {
       return data;
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(`Failed to fetch from Deezer API: ${error.message}`);
+        throw new Error(`Failed to fetch from JimceDeezerAPI: ${error.message}`);
       }
       throw error;
     }
