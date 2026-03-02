@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import {
   Track,
   Album,
@@ -11,6 +12,19 @@ import {
   Radio,
   User,
   DeezerOptions,
+  DeezerValidationError,
+  DeezerNetworkError,
+  DeezerAPIError,
+  TrackSchema,
+  SearchResultSchema,
+  GenreDataSchema,
+  ChartSchema,
+  PlaylistSchema,
+  PodcastSchema,
+  EpisodeSchema,
+  RadioSchema,
+  ArtistSchema,
+  AlbumSchema,
 } from './types';
 
 export class JimceDeezerAPI {
@@ -122,16 +136,74 @@ export class JimceDeezerAPI {
       const response = await fetch(`${this.baseUrl}${endpoint}`);
 
       if (!response.ok) {
-        throw new Error(
-          `Deezer API error: ${response.status} ${response.statusText}`
-        );
+        throw new DeezerAPIError(response.status, response.statusText);
       }
 
-      const data: T = await response.json();
+      const data = await response.json();
+      
+      // Validate response based on endpoint
+      const validatedData = this.validateResponseData(endpoint, data);
+      return validatedData as T;
+    } catch (error) {
+      if (error instanceof DeezerAPIError) {
+        throw error;
+      }
+      if (error instanceof DeezerValidationError) {
+        throw error;
+      }
+      if (error instanceof Error) {
+        throw new DeezerNetworkError(`Failed to fetch from JimceDeezerAPI: ${error.message}`);
+      }
+      throw new DeezerNetworkError('Failed to fetch from JimceDeezerAPI: Unknown error');
+    }
+  }
+
+  /**
+   * Validate response data based on endpoint
+   */
+  private validateResponseData(endpoint: string, data: any): any {
+    try {
+      if (endpoint.startsWith('/search')) {
+        return SearchResultSchema.parse(data);
+      }
+      if (endpoint.startsWith('/track/')) {
+        return TrackSchema.parse(data);
+      }
+      if (endpoint.startsWith('/album/')) {
+        return AlbumSchema.parse(data);
+      }
+      if (endpoint.startsWith('/artist/')) {
+        return ArtistSchema.parse(data);
+      }
+      if (endpoint.startsWith('/chart')) {
+        return ChartSchema.parse(data);
+      }
+      if (endpoint.startsWith('/playlist/')) {
+        return PlaylistSchema.parse(data);
+      }
+      if (endpoint.startsWith('/podcast/')) {
+        return PodcastSchema.parse(data);
+      }
+      if (endpoint.startsWith('/episode/')) {
+        return EpisodeSchema.parse(data);
+      }
+      if (endpoint.startsWith('/radio/')) {
+        return RadioSchema.parse(data);
+      }
+      if (endpoint.startsWith('/genre')) {
+        return GenreDataSchema.parse(data);
+      }
+      // For endpoints without specific validation, return as is
       return data;
     } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`Failed to fetch from JimceDeezerAPI: ${error.message}`);
+      if (error instanceof z.ZodError) {
+        const errorMessages = (error as z.ZodError)
+          .issues
+          .map((issue: any) => `${issue.path.join('.')} - ${issue.message}`)
+          .join(', ');
+        throw new DeezerValidationError(
+          `Invalid response format from Deezer API: ${errorMessages}`
+        );
       }
       throw error;
     }

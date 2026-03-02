@@ -1,8 +1,9 @@
-import { JimceDeezerAPI, SearchResult, Track, Album, Artist } from '../../src';
+import { JimceDeezerAPI, SearchResult, Track, Album, Artist, DeezerAPIError, DeezerNetworkError, DeezerValidationError } from '../../src';
 
 /**
  * Functional Tests - These tests run against the REAL Deezer API
  * They use IDs from search results to ensure valid data
+ * IMPORTANT: These tests verify actual API calls are made, not mocked
  */
 describe('JimceDeezerAPI Functional Tests (Real API)', () => {
   let client: JimceDeezerAPI;
@@ -307,7 +308,64 @@ describe('JimceDeezerAPI Functional Tests (Real API)', () => {
         // Error is expected
         expect(error).toBeDefined();
         expect(error instanceof Error).toBe(true);
+        // Verify it's one of our custom error types or a validation error
+        expect(
+          error instanceof DeezerAPIError ||
+          error instanceof DeezerNetworkError ||
+          error instanceof DeezerValidationError
+        ).toBe(true);
       }
+    });
+  });
+
+  /**
+   * Validation Tests - Verify Zod validation works with real API data
+   */
+  describe('Validation with Real API Data', () => {
+    it('should validate search results have correct structure', async () => {
+      expect(searchResults).toBeDefined();
+      expect(searchResults.data).toBeDefined();
+      expect(Array.isArray(searchResults.data)).toBe(true);
+      
+      // Verify each track has required fields
+      searchResults.data.forEach(track => {
+        expect(track).toHaveProperty('id');
+        expect(track).toHaveProperty('title');
+        expect(track).toHaveProperty('artist');
+        expect(typeof track.id).toBe('number');
+        expect(typeof track.title).toBe('string');
+      });
+    });
+
+    it('should validate track response has correct structure', async () => {
+      const track = await client.getTrack(trackId);
+      
+      expect(track).toHaveProperty('id');
+      expect(track).toHaveProperty('title');
+      expect(track).toHaveProperty('artist');
+      expect(track.artist).toHaveProperty('id');
+      expect(track.artist).toHaveProperty('name');
+    });
+
+    it('should validate album response has correct structure', async () => {
+      const album = await client.getAlbum(albumData.id);
+      
+      expect(album).toHaveProperty('id');
+      expect(album).toHaveProperty('title');
+      expect(typeof album.id).toBe('number');
+      expect(typeof album.title).toBe('string');
+    });
+
+    it('should validate genres array is properly formatted', async () => {
+      const genres = await client.getGenres();
+      
+      expect(Array.isArray(genres)).toBe(true);
+      genres.forEach(genre => {
+        expect(genre).toHaveProperty('id');
+        expect(genre).toHaveProperty('name');
+        expect(typeof genre.id).toBe('number');
+        expect(typeof genre.name).toBe('string');
+      });
     });
   });
 

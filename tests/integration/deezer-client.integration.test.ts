@@ -1,4 +1,4 @@
-import { JimceDeezerAPI } from '../../src/deezer';
+import { JimceDeezerAPI, DeezerAPIError, DeezerNetworkError, DeezerValidationError } from '../../src';
 
 // Mock fetch globally
 global.fetch = jest.fn();
@@ -18,7 +18,11 @@ describe('JimceDeezerAPI Integration Tests (Mocked)', () => {
               id: 1,
               title: 'Test Track',
               duration: 180,
+              rank: 1000,
+              explicit_lyrics: false,
               artist: { id: 1, name: 'Test Artist' },
+              album: { id: 1, title: 'Test Album' },
+              preview: 'https://example.com/preview.mp3',
             },
           ],
           total: 1,
@@ -62,7 +66,11 @@ describe('JimceDeezerAPI Integration Tests (Mocked)', () => {
           id: 123,
           title: 'Test Song',
           duration: 240,
+          rank: 500,
+          explicit_lyrics: false,
           artist: { id: 1, name: 'Artist' },
+          album: { id: 10, title: 'Album' },
+          preview: 'https://example.com/preview.mp3',
         }),
       };
 
@@ -175,7 +183,7 @@ describe('JimceDeezerAPI Integration Tests (Mocked)', () => {
   });
 
   describe('Error Handling', () => {
-    it('should throw error on API error response', async () => {
+    it('should throw DeezerAPIError on API error response', async () => {
       const mockResponse = {
         ok: false,
         status: 404,
@@ -186,21 +194,50 @@ describe('JimceDeezerAPI Integration Tests (Mocked)', () => {
 
       const client = new JimceDeezerAPI();
 
-      await expect(client.getTrack(999999)).rejects.toThrow(
-        'Deezer API error'
-      );
+      await expect(client.getTrack(999999)).rejects.toThrow(DeezerAPIError);
     });
 
-    it('should throw error on fetch failure', async () => {
+    it('should throw DeezerNetworkError on fetch failure', async () => {
       (global.fetch as jest.Mock).mockRejectedValue(
         new Error('Network error')
       );
 
       const client = new JimceDeezerAPI();
 
-      await expect(client.search('test')).rejects.toThrow(
-        'Failed to fetch from JimceDeezerAPI'
-      );
+      await expect(client.search('test')).rejects.toThrow(DeezerNetworkError);
+    });
+
+    it('should throw DeezerValidationError on invalid response format', async () => {
+      const mockResponse = {
+        ok: true,
+        json: jest.fn().mockResolvedValue({
+          // Invalid: missing required 'data' field
+          total: 1,
+        }),
+      };
+
+      (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
+
+      const client = new JimceDeezerAPI();
+
+      await expect(client.search('test')).rejects.toThrow(DeezerValidationError);
+    });
+
+    it('should throw DeezerValidationError when track response is invalid', async () => {
+      const mockResponse = {
+        ok: true,
+        json: jest.fn().mockResolvedValue({
+          id: 123,
+          // Missing required 'title' field
+          duration: 240,
+        }),
+      };
+
+      (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
+
+      const client = new JimceDeezerAPI();
+
+      await expect(client.getTrack(123)).rejects.toThrow(DeezerValidationError);
     });
   });
 
@@ -208,7 +245,10 @@ describe('JimceDeezerAPI Integration Tests (Mocked)', () => {
     it('should use custom base URL', async () => {
       const mockResponse = {
         ok: true,
-        json: jest.fn().mockResolvedValue({ data: [] }),
+        json: jest.fn().mockResolvedValue({ 
+          data: [],
+          total: 0,
+        }),
       };
 
       (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
