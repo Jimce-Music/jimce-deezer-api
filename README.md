@@ -149,6 +149,20 @@ npm run test:all
 npm run test:watch
 ```
 
+### GitHub Actions (automatische Tests)
+
+Die CI-Pipeline ist unter [.github/workflows/tests.yml](.github/workflows/tests.yml) definiert.
+
+- **Integration Tests (mocked)** laufen automatisch bei:
+	- Pull Requests
+	- Push auf `main` und `master`
+- **Functional Tests (echte Deezer API, nicht gemockt)** laufen automatisch bei:
+	- Push auf `main` und `master`
+	- Nightly Schedule (jeden Tag um 02:00 UTC)
+	- Manueller Ausführung via `workflow_dispatch`
+
+So bleibt PR-Feedback schnell, und die echten API-Tests laufen zusätzlich regelmäßig automatisiert.
+
 ### Test-Struktur
 ```
 tests/
