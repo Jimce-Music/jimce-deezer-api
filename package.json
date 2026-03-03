@@ -2,13 +2,13 @@
     "name": "jimce-deezer-api-ts",
     "version": "0.0.1",
     "description": "A TypeScript Deezer API client for Node.js",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "main": "dist/src/index.js",
+    "types": "dist/src/index.d.ts",
     "exports": {
         ".": {
-            "import": "./dist/index.js",
-            "require": "./dist/index.js",
-            "types": "./dist/index.d.ts"
+            "import": "./dist/src/index.js",
+            "require": "./dist/src/index.js",
+            "types": "./dist/src/index.d.ts"
         }
     },
     "files": [
