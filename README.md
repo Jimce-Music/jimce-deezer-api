@@ -1,6 +1,6 @@
 # Jimce Deezer API Client
 
-Ein TypeScript-basierter Deezer API Client für Node.js.
+A TypeScript-based Deezer API Client for Node.js.
 
 ## Installation
 
@@ -8,25 +8,25 @@ Ein TypeScript-basierter Deezer API Client für Node.js.
 npm install jimce-deezer-api
 ```
 
-## Verwendung
+## Usage
 
-### Grundlegende Nutzung
+### Basic Usage
 
 ```typescript
 import { JimceDeezerAPI } from 'jimce-deezer-api';
 
 const client = new JimceDeezerAPI();
 
-// Suche nach einem Track
-const results = await client.search('Bella Napoli');
-console.log(results);
+// Search for a track
+const results = await client.search('YOUR SEARCH');
+const data = JSON.stringify(results, null, 2)
+console.log(data);
 ```
 
-### API Methoden
+### API Methods
 
-#### Suche
+#### Search
 ```typescript
-// Nach hinten wird der vollständige SearchResult mit allen Track-Details zurückgegeben
 const results = await client.search('Bella Napoli');
 ```
 
@@ -35,12 +35,12 @@ const results = await client.search('Bella Napoli');
 const track = await client.getTrack(<TRACK_ID>);
 ```
 
-#### Alben
+#### Albums
 ```typescript
 const album = await client.getAlbum(<ALBUM_ID>);
 ```
 
-#### Künstler
+#### Artists
 ```typescript
 const artist = await client.getArtist(<ARTIST_ID>);
 ```
@@ -65,7 +65,7 @@ const episode = await client.getEpisode(<EPISODE_ID>);
 const radio = await client.getRadio(<RADIO_ID>);
 ```
 
-#### Chart (Top Charts)
+#### Charts (Top Charts)
 ```typescript
 const chart = await client.getChart();
 ```
@@ -80,15 +80,15 @@ const genres = await client.getGenres();
 const editorial = await client.getEditorial();
 ```
 
-#### API Informationen
+#### API Information
 ```typescript
 const infos = await client.getInfos();
 const options = await client.getOptions();
 ```
 
-## Typen
+## Types
 
-Das Package kommt mit vollständiger TypeScript-Unterstützung:
+The package comes with full TypeScript support:
 
 ```typescript
 import { Track, Album, Artist, SearchResult } from 'jimce-deezer-api';
@@ -97,73 +97,73 @@ const results: SearchResult = await client.search('Query');
 const track: Track = results.data[0];
 ```
 
-## Entwicklung
+## Development
 
 ### Build
 ```bash
 npm run build
 ```
 
-### Watch Mode
+### Development Watch Mode
 ```bash
 npm run dev
 ```
 
 ### Testing
 
-Das Package hat zwei verschiedene Test-Suites:
+The package includes two different test suites:
 
-#### 1. Integration Tests (mit Mocking)
-Normale Unit-Tests mit gemockten API-Responses:
+#### 1. Integration Tests (Mocked)
+Standard unit tests with mocked API responses:
 
 ```bash
 npm test
 ```
 
-Diese Tests:
-- ✅ Mocken die Fetch-Requests
-- ✅ Testen die Kodierung von Parametern
-- ✅ Testen Error-Handling
-- ✅ Vollständig isoliert von der echten API
+These tests:
+- ✅ Mock the fetch requests
+- ✅ Test parameter encoding
+- ✅ Test error handling
+- ✅ Completely isolated from the real API
 
-#### 2. Funktionstests (gegen echte API)
-End-to-End Tests gegen die REAL Deezer API:
+#### 2. Functional Tests (Real API)
+End-to-end tests against the real Deezer API:
 
 ```bash
 npm run test:functional
 ```
 
-Diese Tests validieren:
-- ✅ Alle 13 API-Endpoints funktionieren
-- ✅ Response-Strukturen sind korrekt
-- ✅ Datentypen stimmen
-- ✅ Gleichzeitige Requests funktionieren
+These tests validate:
+- ✅ All 13 API endpoints work
+- ✅ Response structures are correct
+- ✅ Data types are correct
+- ✅ Concurrent requests work
 
-#### Alle Tests
+#### All Tests
 ```bash
 npm run test:all
 ```
 
-#### Watch Mode
+#### Test Watch Mode
 ```bash
 npm run test:watch
 ```
 
-### GitHub Actions (automatische Tests)
+### GitHub Actions (Automated Tests)
 
-Die CI-Pipeline ist unter [.github/workflows/tests.yml](.github/workflows/tests.yml) definiert.
+The CI pipeline is defined in [.github/workflows/tests.yml](.github/workflows/tests.yml).
 
-- **Integration Tests (mocked)** laufen automatisch bei:
-	- Pull Requests
-	- Push auf `main` und `master`
-- **Functional Tests (echte Deezer API, nicht gemockt)** laufen automatisch bei:
-	- Push auf `main` und `master`
-	- Nightly Schedule (jeden Tag um 02:00 UTC)
-	- Manueller Ausführung via `workflow_dispatch`
+- **Integration Tests (mocked)** run automatically on:
+	- Pull requests
+	- Push to `main` and `master`
+- **Functional Tests (real Deezer API, not mocked)** run automatically on:
+	- Push to `main` and `master`
+	- Schedule (Monday and Thursday at 02:00 UTC)
+	- Manual trigger via `workflow_dispatch`
 
-So bleibt PR-Feedback schnell, und die echten API-Tests laufen zusätzlich regelmäßig automatisiert.
+This keeps PR feedback fast while real API tests run automatically on a regular schedule.
 
-### Test-Struktur
+### Test Structure
 ```
 tests/
 ├── integration/
@@ -173,6 +173,6 @@ tests/
 └── setup.ts
 ```
 
-## Lizenz
+## License
 
 MIT
