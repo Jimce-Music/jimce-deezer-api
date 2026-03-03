@@ -5,7 +5,7 @@ A TypeScript-based Deezer API Client for Node.js.
 ## Installation
 
 ```bash
-npm install jimce-deezer-api
+npm install jimce-deezer-api-ts
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ npm install jimce-deezer-api
 ### Basic Usage
 
 ```typescript
-import { JimceDeezerAPI } from 'jimce-deezer-api';
+import { JimceDeezerAPI } from 'jimce-deezer-api-ts';
 
 const client = new JimceDeezerAPI();
 
@@ -27,7 +27,7 @@ console.log(data);
 
 #### Search
 ```typescript
-const results = await client.search('Bella Napoli');
+const results = await client.search('YOUR SEARCH');
 ```
 
 #### Tracks
@@ -91,7 +91,7 @@ const options = await client.getOptions();
 The package comes with full TypeScript support:
 
 ```typescript
-import { Track, Album, Artist, SearchResult } from 'jimce-deezer-api';
+import { Track, Album, Artist, SearchResult } from 'jimce-deezer-api-ts';
 
 const results: SearchResult = await client.search('Query');
 const track: Track = results.data[0];

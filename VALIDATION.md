@@ -70,7 +70,7 @@ import {
   DeezerAPIError, 
   DeezerNetworkError, 
   DeezerValidationError 
-} from 'jimce-deezer-api';
+} from 'jimce-deezer-api-ts';
 
 const client = new JimceDeezerAPI();
 
