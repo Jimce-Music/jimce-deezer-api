@@ -175,4 +175,4 @@ tests/
 
 ## License
 
-MIT
+[MIT License](LICENSE)
