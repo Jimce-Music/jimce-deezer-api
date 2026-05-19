@@ -2,6 +2,10 @@
     "compilerOptions": {
         "target": "es6",
         "module": "commonjs",
+        "types": [
+            "@types/jest",
+            "@types/node"
+        ],
         "declaration": true,
         "outDir": "./dist",
         "strict": true,
